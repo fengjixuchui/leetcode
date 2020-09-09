@@ -9,35 +9,33 @@ struct Node {
 
 static struct Node *copyRandomList(struct Node *head)
 {
-    if (head == NULL) {
-        return NULL;
-    }
-
-    /* copy and redirect next pointer */
-    struct Node *p, *new;
-    for (p = head; p != NULL; p = p->next->next) {
-        new = malloc(sizeof(*new));
-        new->val = p->val;
-        new->next = p->next;
-        p->next = new;
+    struct Node *p, *q;
+    /* insert interleavingly */
+    for (p = head; p != NULL; p = q->next) {
+        q = malloc(sizeof(*q));
+        q->val = p->val;
+        q->next = p->next;
+        p->next = q;
     }
 
     /* clone random pointer */
-    for (p = head; p != NULL; p = p->next->next) {
-        new = p->next;
-        new->random = p->random != NULL ? p->random->next : NULL;
+    for (p = head; p != NULL; p = q->next) {
+        q = p->next;
+        q->random = p->random != NULL ? p->random->next : NULL;
     }
 
     struct Node dummy;
     struct Node *prev = &dummy;
-    for (p = head; p != NULL; p = p->next) {
-        new = p->next;
-        p->next = new->next;
-        /* correct the actual next pointer of the new list */
-        prev->next = new;
-        prev = new;
-        new->next = NULL;
+    prev->next = head;
+    /* separate q list */
+    for (p = head; p != NULL; p = q->next) {
+        q = p->next;
+        /* restore p->next */
+        p->next = q->next;
+        prev->next = q;
+        prev = q;
     }
+    /* q->next = NULL */
 
     return dummy.next;
 }
