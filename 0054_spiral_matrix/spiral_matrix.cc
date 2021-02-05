@@ -5,17 +5,12 @@ using namespace std;
 class Solution {
 public:
     vector<int> spiralOrder(vector<vector<int>>& matrix) {
-        if (matrix.empty()) {
-            return vector<int>();
-        }
-
-        int hor_top = 0;
-        int hor_bottom = matrix.size();
-        int ver_left = 0;
-        int ver_right = matrix[0].size();
-        int direction = 0;
         vector<int> res;
-
+        int hor_top = 0;
+        int hor_bottom = matrix.size() - 1;
+        int ver_left = 0;
+        int ver_right = matrix[0].size() - 1;
+        int direction = 0;
         while (hor_top <= hor_bottom && ver_left <= ver_right) {
             switch (direction) {
             case 0:
